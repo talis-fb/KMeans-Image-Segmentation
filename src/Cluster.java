@@ -1,8 +1,16 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Cluster {
     Point center;
     List<Point> points;
+
+    static public Cluster build_with_center(Point center) {
+        var instance = new Cluster();
+        instance.center = center;
+        instance.points = new ArrayList<>();
+        return instance;
+    }
 
     Point calculateCenterPoint() {
         var len = this.points.size();
@@ -15,7 +23,16 @@ public class Cluster {
         return new Point(xMean, yMean, zMean);
     }
 
-    void assignPoints(List<Point> points) {
+    public Point getCenter() {
+        return center;
+    }
 
+    public void addPoints(Point point) {
+        this.points.add(point);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Center: %s | %s", center, points);
     }
 }

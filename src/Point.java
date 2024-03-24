@@ -11,6 +11,10 @@ public class Point {
         this.z = z;
     }
 
+    public boolean isEquals(Point other) {
+        return (this.x == other.x) && (this.y == other.y) && (this.z == other.z);
+    }
+
     public double euclideanDistance(Point other) {
         double xDiff = this.x - other.x;
         double yDiff = this.y - other.y;
@@ -28,5 +32,10 @@ public class Point {
 
     public double getZ() {
         return z;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("(%s, %s, %s)", x, y, z);
     }
 }
