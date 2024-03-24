@@ -2,22 +2,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class KmeansSerialBuilder {
-    List<Point> values;
-    int K;
-
-    Optional<List<Point>> initialCenters = Optional.empty();
-
-    public void setValues(List<Point> values) {
-        this.values = values;
-    }
-
-    public void setK(int k) {
-        K = k;
-    }
-
-    public void setInitialCenters(List<Point> initialCenters) {
-        this.initialCenters = Optional.of(initialCenters);
-    }
+    private List<Point> values;
+    private int K;
+    private Optional<List<Point>> initialCenters = Optional.empty();
 
     public List<Cluster> execute() {
         var initialCenters = this.initialCenters.orElse(Utils.extractRandomElementFromList(this.values, this.K));
@@ -44,7 +31,7 @@ public class KmeansSerialBuilder {
             for (int i = 0; i < clusters.size(); i++) {
                 var cluster = clusters.get(i);
                 var distance = point.euclideanDistance(cluster.getCenter());
-                if(distance < minDistance) {
+                if (distance < minDistance) {
                     minDistance = distance;
                     index = i;
                 }
@@ -64,4 +51,15 @@ public class KmeansSerialBuilder {
         return true;
     }
 
+    public void setValues(List<Point> values) {
+        this.values = values;
+    }
+
+    public void setK(int k) {
+        K = k;
+    }
+
+    public void setInitialCenters(List<Point> initialCenters) {
+        this.initialCenters = Optional.of(initialCenters);
+    }
 }

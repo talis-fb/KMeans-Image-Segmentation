@@ -6,11 +6,11 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         var data = new ArrayList<>(List.of(
-                new Point(1,2, 0),
-                new Point(2,3, 0),
-                new Point(8,10, 0),
-                new Point(9,11, 0),
-                new Point(10,12, 0 )
+                new Point(1, 2, 0),
+                new Point(2, 3, 0),
+                new Point(8, 10, 0),
+                new Point(9, 11, 0),
+                new Point(10, 12, 0)
         ));
 
         var K = 2;
@@ -22,7 +22,7 @@ public class Main {
         var output = kmeans.execute();
 
         System.out.println("Saida...");
-        for (var cluster: output) {
+        for (var cluster : output) {
             System.out.println(cluster.toString());
         }
     }
