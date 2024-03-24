@@ -36,7 +36,7 @@ public class KmeansSerialBuilder {
                     index = i;
                 }
             }
-            clusters.get(index).addPoints(point);
+            clusters.get(index).addPoint(point);
         }
         return clusters;
     }

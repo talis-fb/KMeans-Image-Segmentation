@@ -2,14 +2,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cluster {
+    public Cluster(Point center, List<Point> points) {
+        this.center = center;
+        this.points = points;
+    }
+
     Point center;
     List<Point> points;
 
     static public Cluster build_with_center(Point center) {
-        var instance = new Cluster();
-        instance.center = center;
-        instance.points = new ArrayList<>();
-        return instance;
+        return new Cluster(center, new ArrayList<>());
     }
 
     Point calculateCenterPoint() {
@@ -27,7 +29,7 @@ public class Cluster {
         return center;
     }
 
-    public void addPoints(Point point) {
+    public void addPoint(Point point) {
         this.points.add(point);
     }
 

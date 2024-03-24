@@ -5,6 +5,12 @@ public class Point {
     private double y;
     private double z;
 
+    Point(float x, float y) {
+        this.x = x;
+        this.y = y;
+        this.z = 0;
+    }
+
     Point(float x, float y, float z) {
         this.x = x;
         this.y = y;
