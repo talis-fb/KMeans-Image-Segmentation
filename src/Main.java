@@ -22,6 +22,8 @@ public class Main {
         var output = kmeans.execute();
 
         System.out.println("Saida...");
-        System.out.println(output.toString());
+        for (var cluster: output) {
+            System.out.println(cluster.toString());
+        }
     }
 }

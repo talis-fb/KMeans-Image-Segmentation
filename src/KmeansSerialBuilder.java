@@ -1,8 +1,11 @@
 import java.util.List;
+import java.util.Optional;
 
 public class KmeansSerialBuilder {
     List<Point> values;
     int K;
+
+    Optional<List<Point>> initialCenters = Optional.empty();
 
     public void setValues(List<Point> values) {
         this.values = values;
@@ -12,9 +15,12 @@ public class KmeansSerialBuilder {
         K = k;
     }
 
-    public List<Cluster> execute() {
-        List<Point> initialCenters = Utils.extractRandomElementFromList(this.values, this.K);
+    public void setInitialCenters(List<Point> initialCenters) {
+        this.initialCenters = Optional.of(initialCenters);
+    }
 
+    public List<Cluster> execute() {
+        var initialCenters = this.initialCenters.orElse(Utils.extractRandomElementFromList(this.values, this.K));
         var clusters = initialCenters.stream().map(Cluster::build_with_center).toList();
 
         while (true) {
@@ -52,7 +58,7 @@ public class KmeansSerialBuilder {
         for (int i = 0; i < list1.size(); i++) {
             var p1 = list1.get(i);
             var p2 = list2.get(i);
-            if (p1.isEquals(p2))
+            if (!p1.isEquals(p2))
                 return false;
         }
         return true;

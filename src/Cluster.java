@@ -33,6 +33,6 @@ public class Cluster {
 
     @Override
     public String toString() {
-        return String.format("Center: %s | %s", center, points);
+        return String.format("{ Center: %s | Points: %s} ", center, points);
     }
 }
