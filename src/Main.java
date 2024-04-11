@@ -1,29 +1,51 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        var data = new ArrayList<>(List.of(
-                new Point(1, 2, 0),
-                new Point(2, 3, 0),
-                new Point(8, 10, 0),
-                new Point(9, 11, 0),
-                new Point(10, 12, 0)
-        ));
+        Scanner sca = new Scanner(System.in);
+        sca.useDelimiter("\n");
 
-        var K = 2;
+        var points = new ArrayList<Point>();
+
+        while (sca.hasNext()){
+            String[] parts = sca.next().trim().split("\\s+");
+            String label = parts[0];
+            int red = Integer.parseInt(parts[1]);
+            int green = Integer.parseInt(parts[2]);
+            int blue = Integer.parseInt(parts[3]);
+            points.add(new Point(label, red, green, blue));
+        }
+
+        // System.out.println("saida");
+        // System.out.println(points);
+
+        var K = 20;
 
         var kmeans = new KmeansSerialBuilder();
-        kmeans.setValues(data);
+        kmeans.setValues(points);
         kmeans.setK(K);
 
         var output = kmeans.execute();
 
-        System.out.println("Saida...");
-        for (var cluster : output) {
-            System.out.println(cluster.toString());
+        var pointsFinal = output
+            .stream()
+            .flatMap(cluster ->
+                cluster.points
+                    .stream()
+                    .map(point ->
+                        new Point(point.getLabel().orElse("--"), cluster.center.getX(), cluster.center.getY(), cluster.center.getZ())
+                    )
+            ).toList();
+
+        // System.out.println("Saida...");
+        for (var point : pointsFinal) {
+            System.out.println(point.display());
         }
     }
 }

@@ -15,13 +15,10 @@ public class Cluster {
     }
 
     Point calculateCenterPoint() {
-        var len = this.points.size();
-        var xSum = this.points.stream().map(Point::getX).reduce(0.0, Double::sum);
-        var ySum = this.points.stream().map(Point::getY).reduce(0.0, Double::sum);
-        var zSum = this.points.stream().map(Point::getZ).reduce(0.0, Double::sum);
-        float xMean = (float) (xSum / len);
-        float yMean = (float) (ySum / len);
-        float zMean = (float) (zSum / len);
+        int len = this.points.size();
+        int xMean = this.points.stream().map(Point::getX).reduce(0, Integer::sum) / len;
+        int yMean = this.points.stream().map(Point::getY).reduce(0, Integer::sum) / len;
+        int zMean = this.points.stream().map(Point::getZ).reduce(0, Integer::sum) / len;
         return new Point(xMean, yMean, zMean);
     }
 

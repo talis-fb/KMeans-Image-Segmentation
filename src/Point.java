@@ -1,17 +1,25 @@
 import java.lang.Math;
+import java.util.Optional;
 
 public class Point {
-    private double x;
-    private double y;
-    private double z;
+    private Optional<String> label = Optional.empty();
+    private int x;
+    private int y;
+    private int z;
 
-    Point(float x, float y) {
+    Point(int x, int y) {
         this.x = x;
         this.y = y;
         this.z = 0;
     }
 
-    Point(float x, float y, float z) {
+    Point(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+    Point(String label, int x, int y, int z) {
+        this.label = Optional.of(label);
         this.x = x;
         this.y = y;
         this.z = z;
@@ -28,20 +36,34 @@ public class Point {
         return Math.pow(xDiff, 2) + Math.pow(yDiff, 2) + Math.pow(zDiff, 2);
     }
 
-    public double getX() {
+    public int getX() {
         return x;
     }
 
-    public double getY() {
+    public int getY() {
         return y;
     }
 
-    public double getZ() {
+    public int getZ() {
         return z;
+    }
+
+    public Optional<String> getLabel() {
+        return label;
     }
 
     @Override
     public String toString() {
         return String.format("(%s, %s, %s)", x, y, z);
+    }
+
+    public String display() {
+        return String.format(
+            "%s %s %s %s",
+            this.getLabel().orElse("--"),
+            this.getX(),
+            this.getY(),
+            this.getZ()
+        );
     }
 }

@@ -50,7 +50,7 @@ class KmeansSerialBuilderTest {
         var output = kmeans.execute();
 
         var expectedClusters = List.of(
-                new Cluster(new Point(1.5F, 2.5F), List.of(
+                new Cluster(new Point(1, 2), List.of(
                         new Point(1, 2),
                         new Point(2, 3)
                 )),
@@ -86,15 +86,15 @@ class KmeansSerialBuilderTest {
         var output = kmeans.execute();
 
         var expectedClusters = List.of(
-                new Cluster(new Point(1.5F, 1.5F), List.of(
+                new Cluster(new Point(1, 1), List.of(
                         new Point(1, 1),
                         new Point(2, 2)
                 )),
-                new Cluster(new Point(8.5F, 8.5F), List.of(
+                new Cluster(new Point(8, 8), List.of(
                         new Point(8, 8),
                         new Point(9, 9)
                 )),
-                new Cluster(new Point(20.5F, 20.5F), List.of(
+                new Cluster(new Point(20, 20), List.of(
                         new Point(20, 20),
                         new Point(21, 21)
                 ))
