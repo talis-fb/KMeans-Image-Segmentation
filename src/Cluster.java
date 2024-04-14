@@ -18,7 +18,7 @@ public class Cluster {
         int len = this.points.size();
 
         if (len == 0)
-            len = 1;
+            return center;
 
         int xMean = this.points.stream().map(Point::getX).reduce(0, Integer::sum) / len;
         int yMean = this.points.stream().map(Point::getY).reduce(0, Integer::sum) / len;
@@ -28,6 +28,10 @@ public class Cluster {
 
     public Point getCenter() {
         return center;
+    }
+
+    public List<Point> getPoints() {
+        return points;
     }
 
     public void addPoint(Point point) {

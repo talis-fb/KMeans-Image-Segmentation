@@ -15,7 +15,7 @@ public class Main {
         // System.err.println("Centers");
         // System.err.println(initialCenters);
 
-        var kmeansRunner = new KmeansParallelBuilder();
+        var kmeansRunner = new KmeansParallelMapBuilder();
         var output = kmeansRunner.execute(values, K, initialCenters);
 
         var pointsFinal = output.stream()
