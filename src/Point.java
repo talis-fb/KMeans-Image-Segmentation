@@ -25,8 +25,22 @@ public class Point {
         this.z = z;
     }
 
+
     public boolean isEquals(Point other) {
         return (this.x == other.x) && (this.y == other.y) && (this.z == other.z);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Point p) {
+            return this.isEquals(p);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return x + y + z;
     }
 
     public double euclideanDistance(Point other) {

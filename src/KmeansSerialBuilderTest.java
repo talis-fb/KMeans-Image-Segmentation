@@ -13,13 +13,13 @@ class KmeansSerialBuilderTest {
                 new Point(1, 2),
                 new Point(5, 8)
         ));
-        var K = 2;
+        var K = 3;
+        var initialCenters = values.stream().limit(K).toList();
 
         var kmeans = new KmeansSerialBuilder();
-        kmeans.setValues(values);
-        kmeans.setK(K);
+        kmeans.execute(values, K, initialCenters);
 
-        var output = kmeans.execute();
+        var output = kmeans.execute(values, K, initialCenters);
 
         var expectedClusters = List.of(
                 new Cluster(new Point(1, 2), List.of(new Point(1, 2))),
@@ -42,12 +42,12 @@ class KmeansSerialBuilderTest {
                 new Point(10, 12)
         ));
         var K = 2;
+        var initialCenters = values.stream().limit(K).toList();
 
         var kmeans = new KmeansSerialBuilder();
-        kmeans.setValues(values);
-        kmeans.setK(K);
+        kmeans.execute(values, K, initialCenters);
 
-        var output = kmeans.execute();
+        var output = kmeans.execute(values, K, initialCenters);
 
         var expectedClusters = List.of(
                 new Cluster(new Point(1, 2), List.of(
@@ -78,12 +78,12 @@ class KmeansSerialBuilderTest {
                 new Point(21, 21)
         ));
         var K = 3;
+        var initialCenters = values.stream().limit(K).toList();
 
         var kmeans = new KmeansSerialBuilder();
-        kmeans.setValues(values);
-        kmeans.setK(K);
+        kmeans.execute(values, K, initialCenters);
 
-        var output = kmeans.execute();
+        var output = kmeans.execute(values, K, initialCenters);
 
         var expectedClusters = List.of(
                 new Cluster(new Point(1, 1), List.of(

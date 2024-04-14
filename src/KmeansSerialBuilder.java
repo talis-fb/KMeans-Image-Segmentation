@@ -1,17 +1,21 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-public class KmeansSerialBuilder {
-    private List<Point> values;
-    private int K;
-    private Optional<List<Point>> initialCenters = Optional.empty();
+public class KmeansSerialBuilder implements Kmean {
 
-    public List<Cluster> execute() {
-        var initialCenters = this.initialCenters.orElse(Utils.extractRandomElementFromList(this.values, this.K));
-        var clusters = initialCenters.stream().map(Cluster::build_with_center).toList();
+    @Override
+    public List<Cluster> execute(List<Point> values, int k, List<Point> initialCenters) {
+        List<Cluster> clusters = initialCenters.stream().map(Cluster::build_with_center).toList();
+
+        double i = 0;
 
         while (true) {
-            clusters = assignPoints(this.values, clusters);
+            // System.err.println("iter " + i);
+            // System.err.println("CENT " + clusters.stream().map(e -> e.center.toString()).toList());
+
+            clusters = assignPoints(values, clusters);
 
             var newCenters = clusters.stream().map(Cluster::calculateCenterPoint).toList();
             var oldCenters = clusters.stream().map(Cluster::getCenter).toList();
@@ -21,22 +25,15 @@ public class KmeansSerialBuilder {
             }
 
             clusters = newCenters.stream().map(Cluster::build_with_center).toList();
+
+            i += 1;
         }
     }
 
     public static List<Cluster> assignPoints(List<Point> points, List<Cluster> clusters) {
         for (var point : points) {
-            double minDistance = Double.MAX_VALUE;
-            int index = 0;
-            for (int i = 0; i < clusters.size(); i++) {
-                var cluster = clusters.get(i);
-                var distance = point.euclideanDistance(cluster.getCenter());
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    index = i;
-                }
-            }
-            clusters.get(index).addPoint(point);
+            int index = KmeanCommon.getIndexClosestCluster(point, clusters);
+            clusters.get(index).points.add(point);
         }
         return clusters;
     }
@@ -51,15 +48,4 @@ public class KmeansSerialBuilder {
         return true;
     }
 
-    public void setValues(List<Point> values) {
-        this.values = values;
-    }
-
-    public void setK(int k) {
-        K = k;
-    }
-
-    public void setInitialCenters(List<Point> initialCenters) {
-        this.initialCenters = Optional.of(initialCenters);
-    }
 }

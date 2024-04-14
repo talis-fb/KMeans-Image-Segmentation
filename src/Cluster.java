@@ -16,6 +16,10 @@ public class Cluster {
 
     Point calculateCenterPoint() {
         int len = this.points.size();
+
+        if (len == 0)
+            len = 1;
+
         int xMean = this.points.stream().map(Point::getX).reduce(0, Integer::sum) / len;
         int yMean = this.points.stream().map(Point::getY).reduce(0, Integer::sum) / len;
         int zMean = this.points.stream().map(Point::getZ).reduce(0, Integer::sum) / len;
