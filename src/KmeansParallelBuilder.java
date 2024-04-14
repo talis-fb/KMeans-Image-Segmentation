@@ -12,14 +12,14 @@ public class KmeansParallelBuilder implements Kmean {
                 finalClusters.get(index).addPointSync(point);
             });
 
-            var newCenters = clusters.stream().map(Cluster::calculateCenterPoint).toList();
-            var oldCenters = clusters.stream().map(Cluster::getCenter).toList();
+            var newCenters = clusters.parallelStream().map(Cluster::calculateCenterPoint).toList();
+            var oldCenters = clusters.parallelStream().map(Cluster::getCenter).toList();
 
             if (KmeanCommon.converged(newCenters, oldCenters)) {
                 return clusters;
             }
 
-            clusters = newCenters.stream().map(Cluster::build_with_center).toList();
+            clusters = newCenters.parallelStream().map(Cluster::build_with_center).toList();
         }
     }
 

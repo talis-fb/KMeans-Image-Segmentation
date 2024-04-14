@@ -9,13 +9,16 @@ public class Main {
 
         List<Point> values = Input.read(System.in);
 
-        var K = 15;
-        List<Point> initialCenters = values.stream().limit(K).toList();
+        var K = 45;
+        List<Point> initialCenters = values.stream().distinct().limit(K).toList();
 
-        // System.err.println("Centers");
-        // System.err.println(initialCenters);
 
         var kmeansRunner = new KmeansParallelMapBuilder();
+
+        System.err.println("MODO: " + kmeansRunner.getClass().getName());
+        System.err.println("Centers");
+        System.err.println(initialCenters);
+
         var output = kmeansRunner.execute(values, K, initialCenters);
 
         var pointsFinal = output.stream()
