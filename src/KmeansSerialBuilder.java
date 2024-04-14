@@ -20,7 +20,7 @@ public class KmeansSerialBuilder implements Kmean {
             var newCenters = clusters.stream().map(Cluster::calculateCenterPoint).toList();
             var oldCenters = clusters.stream().map(Cluster::getCenter).toList();
 
-            if (converged(newCenters, oldCenters)) {
+            if (KmeanCommon.converged(newCenters, oldCenters)) {
                 return clusters;
             }
 
@@ -38,14 +38,5 @@ public class KmeansSerialBuilder implements Kmean {
         return clusters;
     }
 
-    public boolean converged(List<Point> list1, List<Point> list2) {
-        for (int i = 0; i < list1.size(); i++) {
-            var p1 = list1.get(i);
-            var p2 = list2.get(i);
-            if (!p1.isEquals(p2))
-                return false;
-        }
-        return true;
-    }
 
 }

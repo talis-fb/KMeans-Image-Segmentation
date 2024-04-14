@@ -34,6 +34,10 @@ public class Cluster {
         this.points.add(point);
     }
 
+    public synchronized void addPointSync(Point point) {
+        this.addPoint(point);
+    }
+
     @Override
     public String toString() {
         return String.format("{ Center: %s | Points: %s} ", center, points);

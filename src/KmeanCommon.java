@@ -14,4 +14,14 @@ public class KmeanCommon {
         }
         return index;
     }
+
+    static public boolean converged(List<Point> list1, List<Point> list2) {
+        for (int i = 0; i < list1.size(); i++) {
+            var p1 = list1.get(i);
+            var p2 = list2.get(i);
+            if (!p1.isEquals(p2))
+                return false;
+        }
+        return true;
+    }
 }
