@@ -4,7 +4,10 @@ import imd.ufrn.br.common.ClustersUtils;
 import imd.ufrn.br.common.PointsUtils;
 import imd.ufrn.br.entities.Cluster;
 import imd.ufrn.br.entities.Point;
+import imd.ufrn.br.kmeans.strategies.KmeansParallelLock;
+import imd.ufrn.br.kmeans.strategies.KmeansParallelSemaphore;
 import imd.ufrn.br.kmeans.strategies.KmeansParallelStream;
+import imd.ufrn.br.kmeans.strategies.ThreadMode;
 import imd.ufrn.br.view.Input;
 
 import java.util.List;
@@ -15,11 +18,11 @@ public class Main {
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
 
-        var K = 10;
+        var K = 5;
         List<Point> values = Input.read(System.in);
         List<Point> initialCenters = PointsUtils.extractDistintInitialValues(values, K);
 
-        var kmeansRunner = new KmeansParallelStream();
+        var kmeansRunner = new KmeansParallelLock(ThreadMode.PLATAFORM, 8);
 
         System.err.println("MODO: " + kmeansRunner.getClass().getName());
         System.err.println("Centers");

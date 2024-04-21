@@ -66,7 +66,7 @@ public class BenchTest {
         var K = this.K;
         var values = this.getInputValues();
         var initialCenters = this.extractInitialCenters(values, K);
-        var output = new KmeansParallel(ThreadMode.PLATAFORM, this.cores).execute(values, K, initialCenters);
+        var output = new KmeansParallelSemaphore(ThreadMode.PLATAFORM, this.cores).execute(values, K, initialCenters);
         bh.consume(output);
     }
 
@@ -79,7 +79,7 @@ public class BenchTest {
         var K = this.K;
         var values = this.getInputValues();
         var initialCenters = this.extractInitialCenters(values, K);
-        var output = new KmeansParallel(ThreadMode.VIRTUAL, this.cores).execute(values, K, initialCenters);
+        var output = new KmeansParallelSemaphore(ThreadMode.VIRTUAL, this.cores).execute(values, K, initialCenters);
         bh.consume(output);
     }
 

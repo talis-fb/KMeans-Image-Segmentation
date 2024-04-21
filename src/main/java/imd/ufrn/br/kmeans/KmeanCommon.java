@@ -22,9 +22,9 @@ public class KmeanCommon {
     }
 
     public static boolean converged(List<Point> list1, List<Point> list2) {
-        System.out.println("converged: ");
-        System.out.println("1 -> " + list1);
-        System.out.println("2 -> " + list2);
+        // System.out.println("converged: ");
+        // System.out.println("1 -> " + list1);
+        // System.out.println("2 -> " + list2);
         // return new HashSet<>(list1).equals(new HashSet<>(list2));
 
         for (int i = 0; i < list1.size(); i++) {

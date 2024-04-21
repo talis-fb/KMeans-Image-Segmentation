@@ -19,13 +19,20 @@ class KmeansTests {
         return Stream.of(
                 new KmeansSerial(),
                 // new KmeansParallel(ThreadMode.PLATAFORM, 1),
-                new KmeansParallel(ThreadMode.PLATAFORM, 8),
                 // new KmeansParallel(ThreadMode.VIRTUAL, 1),
-                new KmeansParallel(ThreadMode.VIRTUAL, 8),
+
+                new KmeansParallelSemaphore(ThreadMode.PLATAFORM, 1),
+                new KmeansParallelSemaphore(ThreadMode.VIRTUAL, 1),
+
+                new KmeansParallelLock(ThreadMode.PLATAFORM, 2),
+                new KmeansParallelLock(ThreadMode.VIRTUAL, 2),
+
+
                 new KmeansParallelEachThread(ThreadMode.VIRTUAL, 1),
-                new KmeansParallelEachThread(ThreadMode.VIRTUAL, 8),
+                new KmeansParallelEachThread(ThreadMode.VIRTUAL, 2),
                 new KmeansParallelEachThread(ThreadMode.PLATAFORM, 1),
-                new KmeansParallelEachThread(ThreadMode.PLATAFORM, 8),
+                new KmeansParallelEachThread(ThreadMode.PLATAFORM, 2),
+
                 new KmeansParallelStream(),
                 new KmeansSerialStreams(),
                 new KmeansParallelStreamMap()
