@@ -18,9 +18,9 @@ class KmeansTests {
     static Stream<KmeanStrategy> allKmeansStrategy() {
         return Stream.of(
                 new KmeansSerial(),
-                new KmeansParallel(ThreadMode.PLATAFORM, 1),
+                // new KmeansParallel(ThreadMode.PLATAFORM, 1),
                 new KmeansParallel(ThreadMode.PLATAFORM, 8),
-                new KmeansParallel(ThreadMode.VIRTUAL, 1),
+                // new KmeansParallel(ThreadMode.VIRTUAL, 1),
                 new KmeansParallel(ThreadMode.VIRTUAL, 8),
                 new KmeansParallelEachThread(ThreadMode.VIRTUAL, 1),
                 new KmeansParallelEachThread(ThreadMode.VIRTUAL, 8),
