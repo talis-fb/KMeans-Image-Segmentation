@@ -1,8 +1,14 @@
+package imd.ufrn.br.kmeans.strategies;
+
+import imd.ufrn.br.entities.Cluster;
+import imd.ufrn.br.entities.Point;
+import imd.ufrn.br.kmeans.KmeanStrategy;
+import imd.ufrn.br.kmeans.KmeanCommon;
+
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-public class KmeansParallelMapBuilder implements Kmean {
+public class KmeansParallelStreamMap implements KmeanStrategy {
     @Override
     public List<Cluster> execute(List<Point> values, int k, List<Point> initialCenters) {
         List<Cluster> clusters = initialCenters.stream().map(Cluster::build_with_center).toList();
@@ -10,7 +16,7 @@ public class KmeansParallelMapBuilder implements Kmean {
         while (true) {
             List<Cluster> finalClusters = clusters;
 
-            clusters = values
+            List<Cluster> newClusters = values
                     .parallelStream()
                     .map(point -> {
                         var index = KmeanCommon.getIndexClosestCluster(point, finalClusters);
@@ -26,11 +32,11 @@ public class KmeansParallelMapBuilder implements Kmean {
                         return new Cluster(center, points);
                     }).toList();
 
-            var newCenters = clusters.parallelStream().map(Cluster::calculateCenterPoint).toList();
-            var oldCenters = clusters.parallelStream().map(Cluster::getCenter).toList();
+            var newCenters = newClusters.parallelStream().map(Cluster::calculateCenterPoint).toList();
+            var oldCenters = finalClusters.parallelStream().map(Cluster::getCenter).toList();
 
             if (KmeanCommon.converged(newCenters, oldCenters)) {
-                return clusters;
+                return newClusters;
             }
 
             clusters = newCenters.parallelStream().map(Cluster::build_with_center).toList();

@@ -1,28 +1,36 @@
+package imd.ufrn.br.entities;
+
 import java.lang.Math;
 import java.util.Optional;
 
 public class Point {
     private Optional<String> label = Optional.empty();
-    private int x;
-    private int y;
-    private int z;
+    private final int x;
+    private final int y;
+    private final int z;
 
-    Point(int x, int y) {
+    public Point(int x, int y) {
         this.x = x;
         this.y = y;
         this.z = 0;
     }
 
-    Point(int x, int y, int z) {
+    public Point(int x, int y, int z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
-    Point(String label, int x, int y, int z) {
+    public Point(String label, int x, int y, int z) {
         this.label = Optional.of(label);
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+    public Point(String label, int x, int y) {
+        this.label = Optional.of(label);
+        this.x = x;
+        this.y = y;
+        this.z = 0;
     }
 
 

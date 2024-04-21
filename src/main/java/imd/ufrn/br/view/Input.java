@@ -1,3 +1,7 @@
+package imd.ufrn.br.view;
+
+import imd.ufrn.br.entities.Point;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;

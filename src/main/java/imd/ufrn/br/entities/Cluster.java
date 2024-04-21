@@ -1,3 +1,5 @@
+package imd.ufrn.br.entities;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +16,7 @@ public class Cluster {
         return new Cluster(center, new ArrayList<>());
     }
 
-    Point calculateCenterPoint() {
+    public Point calculateCenterPoint() {
         int len = this.points.size();
 
         if (len == 0)
@@ -28,6 +30,10 @@ public class Cluster {
 
     public Point getCenter() {
         return center;
+    }
+
+    public void setCenter(Point center) {
+        this.center = center;
     }
 
     public List<Point> getPoints() {
