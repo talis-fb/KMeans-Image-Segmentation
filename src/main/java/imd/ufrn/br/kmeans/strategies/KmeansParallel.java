@@ -7,6 +7,8 @@ import imd.ufrn.br.kmeans.KmeanStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class KmeansParallel implements KmeanStrategy {
     public int threads = 1;
@@ -25,38 +27,55 @@ public class KmeansParallel implements KmeanStrategy {
             clusters.add(new Cluster(center, new ArrayList<>()));
         }
 
+        var hasFinished = new AtomicBoolean(false);
+        var semaphore = new Semaphore(this.threads);
+
         var threadBuilder = switch (this.mode) {
             case VIRTUAL -> Thread.ofVirtual();
             case PLATAFORM -> Thread.ofPlatform();
         };
 
-        while (true) {
-            List<Thread> threads = new ArrayList<>();
-            for (int i = 0 ; i < this.threads; i++) {
-                int indexOfThread = i;
-                Thread thread = threadBuilder.start(() -> {
-                    int iteration = indexOfThread;
-                    while (iteration < values.size()) {
-                        var targetPoint = values.get(iteration);
-                        int indexClosestCluster = KmeanCommon.getIndexClosestCluster(targetPoint, clusters);
+        List<Thread> threads = new ArrayList<>();
 
-                        // TODO: Add synchronized
-                        clusters.get(indexClosestCluster).addPointSync(targetPoint);
+        for (int i = 0; i < this.threads; i++) {
+            int indexOfThread = i;
 
-                        iteration += this.threads;
+            Thread thread = threadBuilder.start(() -> {
+                int initialIndex = indexOfThread;
+                int index = initialIndex;
+
+                while (!hasFinished.get()) {
+                    try {
+                        semaphore.acquire();
+
+                        while (index < values.size()) {
+                            var targetPoint = values.get(index);
+                            int indexClosestCluster = KmeanCommon.getIndexClosestCluster(targetPoint, clusters);
+
+                            Cluster targetCluster = clusters.get(indexClosestCluster);
+
+                            synchronized (targetCluster) {
+                                targetCluster.addPoint(targetPoint);
+                            }
+
+                            index += this.threads;
+                        }
+
+                        semaphore.release();
+
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
-                });
-
-                threads.add(thread);
-            }
-
-            for (Thread thread : threads) {
-                try {
-                    thread.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
-            }
+
+
+            });
+
+            threads.add(thread);
+        }
+
+        while (true) {
+            semaphore.availablePermits()
 
             var oldCenters = new ArrayList<Point>();
             var newCenters = new ArrayList<Point>();
@@ -67,6 +86,16 @@ public class KmeansParallel implements KmeanStrategy {
             }
 
             if (KmeanCommon.converged(newCenters, oldCenters)) {
+                hasFinished.set(true);
+
+                for (Thread thread : threads) {
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 return clusters;
             }
 
