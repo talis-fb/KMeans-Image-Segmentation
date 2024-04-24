@@ -13,23 +13,39 @@ import java.util.List;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        long startTime = System.currentTimeMillis();
+        System.err.println(" [BEGIN] ");
+
+        // Check memory available
+        long heapFreeSize = Runtime.getRuntime().freeMemory();
+        long totalFreeMemoryInMB = heapFreeSize / (1024 * 1024);
+        long heapMaxSize = Runtime.getRuntime().maxMemory();
+        long maxMemoryInMB = heapMaxSize / (1024 * 1024);
+        System.out.println("Heap Max Size = " + maxMemoryInMB);
+        System.out.println("Heap Available = " + totalFreeMemoryInMB);
+
+        // Start couting
+        long timeMsStart = System.currentTimeMillis();
 
         var K = 5;
         List<Point> values = Input.read(System.in);
         List<Point> initialCenters = PointsUtils.extractDistintInitialValues(values, K);
 
-        var kmeansRunner = new KmeansParallelSemaphore(ThreadMode.PLATAFORM, 8);
+        System.err.println("Get values");
+        var threadMode = ThreadMode.VIRTUAL;
+        var kmeansRunner = new KmeansParallelLock(threadMode, 8);
+        // var kmeansRunner = new KmeansParallelStream();
 
         System.err.println("MODO: " + kmeansRunner.getClass().getName());
-        System.err.println("Centers");
-        System.err.println(initialCenters);
+        System.err.println("  ThreadMode : " + threadMode);
+
+        long elapsedTimeStartKmeans = System.currentTimeMillis() - timeMsStart;
+        System.out.println("Time before Kmeans: " + elapsedTimeStartKmeans);
 
         List<Cluster> output = kmeansRunner.execute(values, K, initialCenters);
         var pointsFinal = ClustersUtils.extractAllPointsWithCenterValues(output);
 
-        long elapsedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time since startup: " + elapsedTime + " milliseconds");
+        long elapsedTimeMsEnd = System.currentTimeMillis() - timeMsStart;
+        System.out.println("Time total MS: " + elapsedTimeMsEnd);
 
         for (var point : pointsFinal) {
             System.out.println(point.display());
