@@ -5,6 +5,6 @@ import imd.ufrn.br.entities.Point;
 
 import java.util.List;
 
-public interface KmeanStrategy {
+public interface  KmeanStrategy {
     List<Cluster> execute(List<Point> values, int k, List<Point> initialCenters);
 }

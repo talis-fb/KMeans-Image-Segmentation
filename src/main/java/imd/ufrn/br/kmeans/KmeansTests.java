@@ -30,6 +30,8 @@ class KmeansTests {
                 new KmeansParallelLockAndSemaphore(ThreadMode.PLATAFORM, 2),
                 new KmeansParallelLockAndSemaphore(ThreadMode.VIRTUAL, 2),
 
+                new KmeansParallelVolatile(ThreadMode.PLATAFORM, 8),
+
 
                 new KmeansParallelEachThread(ThreadMode.VIRTUAL, 1),
                 new KmeansParallelEachThread(ThreadMode.VIRTUAL, 2),
