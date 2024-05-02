@@ -37,6 +37,7 @@ class KmeansTests {
                 new KmeansParallelEachThread(ThreadMode.VIRTUAL, 2),
                 new KmeansParallelEachThread(ThreadMode.PLATAFORM, 1),
                 new KmeansParallelEachThread(ThreadMode.PLATAFORM, 2),
+                new KmeansAdder(ThreadMode.PLATAFORM, 8),
 
                 new KmeansParallelStream(),
                 new KmeansSerialStreams(),

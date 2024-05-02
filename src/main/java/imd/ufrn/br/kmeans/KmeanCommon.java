@@ -21,6 +21,20 @@ public class KmeanCommon {
         return index;
     }
 
+    public static int getIndexClosestCentroid(Point point, List<Point> centroids) {
+        double minDistance = Double.MAX_VALUE;
+        int index = 0;
+        for (int i = 0; i < centroids.size(); i++) {
+            Point centroid = centroids.get(i);
+            var distance = point.euclideanDistance(centroid);
+            if (distance < minDistance) {
+                minDistance = distance;
+                index = i;
+            }
+        }
+        return index;
+    }
+
     public static boolean converged(List<Point> list1, List<Point> list2) {
         // System.out.println("converged: ");
         // System.out.println("1 -> " + list1);
