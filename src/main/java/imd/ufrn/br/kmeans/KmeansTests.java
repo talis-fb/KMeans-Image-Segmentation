@@ -27,17 +27,20 @@ class KmeansTests {
                 new KmeansParallelLock(ThreadMode.PLATAFORM, 2),
                 new KmeansParallelLock(ThreadMode.VIRTUAL, 2),
 
-                new KmeansParallelLockAndSemaphore(ThreadMode.PLATAFORM, 2),
-                new KmeansParallelLockAndSemaphore(ThreadMode.VIRTUAL, 2),
+                // new KmeansParallelLockAndSemaphore(ThreadMode.PLATAFORM, 2),
+                // new KmeansParallelLockAndSemaphore(ThreadMode.VIRTUAL, 2),
 
                 new KmeansParallelVolatile(ThreadMode.PLATAFORM, 8),
 
 
-                new KmeansParallelEachThread(ThreadMode.VIRTUAL, 1),
                 new KmeansParallelEachThread(ThreadMode.VIRTUAL, 2),
-                new KmeansParallelEachThread(ThreadMode.PLATAFORM, 1),
+                new KmeansParallelEachThread(ThreadMode.VIRTUAL, 8),
                 new KmeansParallelEachThread(ThreadMode.PLATAFORM, 2),
+                new KmeansParallelEachThread(ThreadMode.PLATAFORM, 8),
+
                 new KmeansAdder(ThreadMode.PLATAFORM, 8),
+
+                new KmeansAtomic(ThreadMode.PLATAFORM, 8),
 
                 new KmeansParallelStream(),
                 new KmeansSerialStreams(),

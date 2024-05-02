@@ -7,14 +7,14 @@ import imd.ufrn.br.kmeans.KmeanStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.LongAdder;
 
-public class KmeansAdder implements KmeanStrategy {
+public class KmeansAtomic implements KmeanStrategy {
     public int threads = 1;
     public ThreadMode mode = ThreadMode.PLATAFORM;
 
-    public KmeansAdder(ThreadMode mode, int threads) {
+    public KmeansAtomic(ThreadMode mode, int threads) {
         this.mode = mode;
         this.threads = threads;
     }
@@ -31,22 +31,20 @@ public class KmeansAdder implements KmeanStrategy {
             case PLATAFORM -> Thread.ofPlatform();
         };
 
-
-        System.out.println("initial: " + initialCenters);
+        List<Thread> threadsRunning = new ArrayList<>();
 
         while (true) {
             List<Point> centroids = clusters.stream().map(Cluster::getCenter).toList();
 
-            List<ClusterAccumulator> clusterAccumulators = clusters.stream().map(_el -> {
+            List<ClusterAccumulator> clusterAccumulators = clusters.stream().map(el -> {
                 var acc = new ClusterAccumulator();
-                acc.accX = new LongAdder();
-                acc.accY = new LongAdder();
-                acc.accZ = new LongAdder();
-                acc.couting = new LongAdder();
+                acc.accX = new AtomicInteger(0);
+                acc.accY = new AtomicInteger(0);
+                acc.accZ = new AtomicInteger(0);
+                acc.couting = new AtomicInteger(0);
                 return acc;
             }).toList();
 
-            List<Thread> threadsRunning = new ArrayList<>();
             for (int i = 0 ; i < this.threads; i++) {
                 ThreadRunner runner = new ThreadRunner();
                 runner.setInitialIndex(i);
@@ -64,22 +62,21 @@ public class KmeansAdder implements KmeanStrategy {
                     e.printStackTrace();
                 }
             }
+            threadsRunning.clear();
 
             List<Point> oldCenters = clusters.stream().map(Cluster::getCenter).toList();
-            List<Point> newCenters = clusterAccumulators.stream().map(acc -> {
-                var size = acc.couting.sum();
+            List<Point> newCenters = clusterAccumulators.stream().map(el -> {
+                var size = el.couting.get();
                 if (size == 0)
                     return new Point(0,0,0);
 
-
-                var meanX = acc.accX.sum() / size;
-                var meanY = acc.accY.sum() / size;
-                var meanZ = acc.accZ.sum() / size;
+                var meanX = el.accX.get() / size;
+                var meanY = el.accY.get() / size;
+                var meanZ = el.accZ.get() / size;
                 return new Point((int) meanX, (int) meanY, (int) meanZ);
             }).toList();
 
             if (KmeanCommon.converged(newCenters, oldCenters)) {
-
                 for (Point value : values) {
                     var closestCluster = KmeanCommon.getIndexClosestCluster(value, clusters);
                     clusters.get(closestCluster).addPoint(value);
@@ -90,20 +87,14 @@ public class KmeansAdder implements KmeanStrategy {
 
             clusters = newCenters.stream().map(center -> new Cluster(center, new ArrayList<>())).toList();
 
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
         }
     }
 
     private class ClusterAccumulator {
-        public LongAdder accX;
-        public LongAdder accY;
-        public LongAdder accZ;
-        public LongAdder couting;
+        public AtomicInteger accX;
+        public AtomicInteger accY;
+        public AtomicInteger accZ;
+        public AtomicInteger couting;
     }
 
     private class ThreadRunner implements Runnable {
@@ -112,19 +103,6 @@ public class KmeansAdder implements KmeanStrategy {
         private List<Point> values;
         private List<Point> centroids;
         private List<ClusterAccumulator> clusterAccumulators;
-
-        @Override
-        public void run() {
-            for (int i = this.initialIndex; i < this.values.size(); i += this.intervalIndex) {
-                Point targetPoint = values.get(i);
-                int clusterIndex = KmeanCommon.getIndexClosestCentroid(targetPoint, this.centroids);
-                var clusterAccumulator = this.clusterAccumulators.get(clusterIndex);
-                clusterAccumulator.accX.add(targetPoint.getX());
-                clusterAccumulator.accY.add(targetPoint.getY());
-                clusterAccumulator.accZ.add(targetPoint.getZ());
-                clusterAccumulator.couting.increment();
-            }
-        }
 
         public void setInitialIndex(int initialIndex) {
             this.initialIndex = initialIndex;
@@ -146,6 +124,18 @@ public class KmeansAdder implements KmeanStrategy {
             this.clusterAccumulators = clusterAccumulators;
         }
 
+        @Override
+        public void run() {
+            for (int i = this.initialIndex; i < this.values.size(); i += this.intervalIndex) {
+                Point targetPoint = values.get(i);
+                int clusterIndex = KmeanCommon.getIndexClosestCentroid(targetPoint, this.centroids);
+                var clusterAccumulator = this.clusterAccumulators.get(clusterIndex);
+                clusterAccumulator.accX.accumulateAndGet(targetPoint.getX(), Integer::sum);
+                clusterAccumulator.accY.accumulateAndGet(targetPoint.getY(), Integer::sum);
+                clusterAccumulator.accZ.accumulateAndGet(targetPoint.getZ(), Integer::sum);
+                clusterAccumulator.couting.incrementAndGet();
+            }
+        }
     }
 
 }

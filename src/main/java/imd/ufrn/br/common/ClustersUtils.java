@@ -3,6 +3,7 @@ package imd.ufrn.br.common;
 import imd.ufrn.br.entities.Cluster;
 import imd.ufrn.br.entities.Point;
 
+import java.io.PrintStream;
 import java.util.List;
 
 public class ClustersUtils {
@@ -21,5 +22,23 @@ public class ClustersUtils {
                               )
               )
               .toList();
+    }
+
+    public static void writeAllPointsWithCenterValues(List<Cluster> clusters, PrintStream printStream) {
+        clusters
+            .parallelStream()
+            .forEach(cluster -> {
+                Point centroid = cluster.getCenter();
+                cluster
+                    .getPoints()
+                    .parallelStream()
+                    .map(p -> new Point(p.getLabel().orElse("--"), centroid.getX(), centroid.getY(), centroid.getZ()))
+                    .forEach(point -> {
+                        synchronized (printStream){
+                            printStream.println(point.display());
+                        }
+                    });
+            });
+
     }
 }
