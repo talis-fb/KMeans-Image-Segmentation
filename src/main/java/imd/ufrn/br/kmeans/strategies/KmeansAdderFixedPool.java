@@ -7,15 +7,13 @@ import imd.ufrn.br.kmeans.KmeanStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.LongAdder;
 
-public class KmeansAdder implements KmeanStrategy {
+public class KmeansAdderFixedPool implements KmeanStrategy {
     public int threads = 1;
-    public ThreadMode mode = ThreadMode.PLATAFORM;
 
-    public KmeansAdder(ThreadMode mode, int threads) {
-        this.mode = mode;
+    public KmeansAdderFixedPool(int threads) {
         this.threads = threads;
     }
 
@@ -26,27 +24,32 @@ public class KmeansAdder implements KmeanStrategy {
             clusters.add(new Cluster(center, new ArrayList<>()));
         }
 
-        var threadBuilder = switch (this.mode) {
-            case VIRTUAL -> Thread.ofVirtual();
-            case PLATAFORM -> Thread.ofPlatform();
-        };
 
+        ExecutorService executorService = Executors.newFixedThreadPool(this.threads);
+        List<Future<?>> futures = new ArrayList<>();
+
+        List<ClusterAccumulator> clusterAccumulators = clusters.stream().map(_el -> {
+            var acc = new ClusterAccumulator();
+            acc.accX = new LongAdder();
+            acc.accY = new LongAdder();
+            acc.accZ = new LongAdder();
+            acc.couting = new LongAdder();
+            return acc;
+        }).toList();
 
         System.out.println("initial: " + initialCenters);
 
         while (true) {
             List<Point> centroids = clusters.stream().map(Cluster::getCenter).toList();
 
-            List<ClusterAccumulator> clusterAccumulators = clusters.stream().map(_el -> {
-                var acc = new ClusterAccumulator();
-                acc.accX = new LongAdder();
-                acc.accY = new LongAdder();
-                acc.accZ = new LongAdder();
-                acc.couting = new LongAdder();
-                return acc;
-            }).toList();
+            clusterAccumulators.forEach(acc -> {
+                acc.accX.reset();
+                acc.accY.reset();
+                acc.accZ.reset();
+                acc.couting.reset();
+            });
 
-            List<Thread> threadsRunning = new ArrayList<>();
+
             for (int i = 0 ; i < this.threads; i++) {
                 ThreadRunner runner = new ThreadRunner();
                 runner.setInitialIndex(i);
@@ -54,14 +57,16 @@ public class KmeansAdder implements KmeanStrategy {
                 runner.setValues(values);
                 runner.setCentroids(centroids);
                 runner.setClusterAccumulators(clusterAccumulators);
-                threadsRunning.add(threadBuilder.start(runner));
+                futures.add(executorService.submit(runner));
             }
 
-            for (Thread thread : threadsRunning) {
+            for (var future: futures) {
                 try {
-                    thread.join();
+                    future.get();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
+                } catch (ExecutionException e) {
+                    throw new RuntimeException(e);
                 }
             }
 
@@ -80,6 +85,8 @@ public class KmeansAdder implements KmeanStrategy {
 
             if (KmeanCommon.converged(newCenters, oldCenters)) {
 
+                executorService.shutdown();
+
                 for (Point value : values) {
                     var closestCluster = KmeanCommon.getIndexClosestCluster(value, clusters);
                     clusters.get(closestCluster).addPoint(value);
@@ -88,7 +95,12 @@ public class KmeansAdder implements KmeanStrategy {
                 return clusters;
             }
 
-            clusters = newCenters.stream().map(center -> new Cluster(center, new ArrayList<>())).toList();
+            for (int i = 0; i < newCenters.size(); i++) {
+                var newCentroid = newCenters.get(i);
+                var cluster = clusters.get(i);
+                cluster.setCenter(newCentroid);
+                cluster.getPoints().clear();
+            }
         }
     }
 

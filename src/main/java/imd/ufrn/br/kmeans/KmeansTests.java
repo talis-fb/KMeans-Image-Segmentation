@@ -39,6 +39,7 @@ class KmeansTests {
                 new KmeansParallelEachThread(ThreadMode.PLATAFORM, 8),
 
                 new KmeansAdder(ThreadMode.PLATAFORM, 8),
+                new KmeansAdderFixedPool( 8),
 
                 new KmeansAtomic(ThreadMode.PLATAFORM, 8),
 
