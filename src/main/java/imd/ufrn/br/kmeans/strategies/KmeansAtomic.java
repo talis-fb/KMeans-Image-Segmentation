@@ -130,9 +130,9 @@ public class KmeansAtomic implements KmeanStrategy {
                 Point targetPoint = values.get(i);
                 int clusterIndex = KmeanCommon.getIndexClosestCentroid(targetPoint, this.centroids);
                 var clusterAccumulator = this.clusterAccumulators.get(clusterIndex);
-                clusterAccumulator.accX.accumulateAndGet(targetPoint.getX(), Integer::sum);
-                clusterAccumulator.accY.accumulateAndGet(targetPoint.getY(), Integer::sum);
-                clusterAccumulator.accZ.accumulateAndGet(targetPoint.getZ(), Integer::sum);
+                clusterAccumulator.accX.addAndGet(targetPoint.getX());
+                clusterAccumulator.accY.addAndGet(targetPoint.getY());
+                clusterAccumulator.accZ.addAndGet(targetPoint.getZ());
                 clusterAccumulator.couting.incrementAndGet();
             }
         }

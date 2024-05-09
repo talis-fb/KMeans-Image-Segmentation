@@ -2,44 +2,53 @@ package imd.ufrn.br.starters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import imd.ufrn.br.entities.Point;
+import imd.ufrn.br.kmeans.KmeanStrategy;
+import imd.ufrn.br.kmeans.strategies.KmeansAdder;
+import imd.ufrn.br.kmeans.strategies.ThreadMode;
 import imd.ufrn.br.starters.server.MsgInput;
+import imd.ufrn.br.starters.server.RequestHandler;
+import imd.ufrn.br.view.Input;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class TCPServer {
+    static ObjectMapper objectMapper = new ObjectMapper();
+
     public static void main(String[] args) {
-        ObjectMapper objectMapper = new ObjectMapper();
+        System.out.println("READING VALUES");
+        List<Point> values = Input.read(System.in);
+
+
+        System.out.println("Init server");
         ServerSocket server = null;
         try {
             server = new ServerSocket(8080);
-        } catch (IOException e2) {
-            e2.printStackTrace();
+            System.out.println("Listen In 8080");
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+
+        KmeanStrategy kmeanStrategy = new KmeansAdder(ThreadMode.PLATAFORM, 8);
+
         while (true) {
             try {
                 Socket nextClient = server.accept();
-                InputStream inputStream = nextClient.getInputStream();
 
-                MsgInput input = objectMapper.readValue(inputStream, MsgInput.class);
+                DataInputStream input = new DataInputStream(nextClient.getInputStream());
+                DataOutputStream output = new DataOutputStream(nextClient.getOutputStream());
 
-                System.out.println("ele " + input);
+                var handler = new RequestHandler(nextClient, input, output, values, kmeanStrategy);
 
-                OutputStream outputStream = nextClient.getOutputStream();
-
-                objectMapper.writeValue(outputStream, input);
-            } catch (Exception e) {
-                System.out.println("Quebour " + e);
+                Thread.ofVirtual().start(handler);
+            } catch (IOException e) {
+                System.err.println("Error around accept...");
                 e.printStackTrace();
-                try {
-                    server.close();
-                    System.out.println("FECHOU");
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                break;
             }
         }
     }

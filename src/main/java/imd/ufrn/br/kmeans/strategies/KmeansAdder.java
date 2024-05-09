@@ -79,7 +79,6 @@ public class KmeansAdder implements KmeanStrategy {
             }).toList();
 
             if (KmeanCommon.converged(newCenters, oldCenters)) {
-
                 for (Point value : values) {
                     var closestCluster = KmeanCommon.getIndexClosestCluster(value, clusters);
                     clusters.get(closestCluster).addPoint(value);

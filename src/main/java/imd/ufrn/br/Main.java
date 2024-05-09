@@ -9,8 +9,6 @@ import imd.ufrn.br.view.Input;
 
 import java.util.List;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
         System.err.println(" [BEGIN] ");
@@ -26,14 +24,13 @@ public class Main {
         // Start couting
         long timeMsStart = System.currentTimeMillis();
 
-        var K = 5;
+        var K = 25;
         List<Point> values = Input.read(System.in);
         List<Point> initialCenters = PointsUtils.extractDistintInitialValues(values, K);
 
         System.err.println("Get values");
-        var threadMode = ThreadMode.VIRTUAL;
-        var kmeansRunner = new KmeansParallelLock(threadMode, 8);
-        // var kmeansRunner = new KmeansParallelStream();
+        var threadMode = ThreadMode.PLATAFORM;
+        var kmeansRunner = new KmeansAtomic(threadMode, 8);
 
         System.err.println("MODO: " + kmeansRunner.getClass().getName());
         System.err.println("  ThreadMode : " + threadMode);
@@ -42,13 +39,11 @@ public class Main {
         System.out.println("Time before Kmeans: " + elapsedTimeStartKmeans);
 
         List<Cluster> output = kmeansRunner.execute(values, K, initialCenters);
-        var pointsFinal = ClustersUtils.extractAllPointsWithCenterValues(output);
 
         long elapsedTimeMsEnd = System.currentTimeMillis() - timeMsStart;
         System.out.println("Time total MS: " + elapsedTimeMsEnd);
 
-        for (var point : pointsFinal) {
-            System.out.println(point.display());
-        }
+        // ClustersUtils.writeAllPointsWithCenterValues(output, System.out);
+
     }
 }
