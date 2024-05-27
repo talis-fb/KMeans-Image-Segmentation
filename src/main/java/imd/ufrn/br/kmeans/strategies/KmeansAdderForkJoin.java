@@ -118,13 +118,13 @@ public class KmeansAdderForkJoin implements KmeanStrategy {
             this.couting.increment();
         }
         public Point getMean() {
-            var size = this.couting.sum();
+            long size = this.couting.sum();
             if (size == 0)
                 return new Point(0,0,0);
 
-            var meanX = this.accX.sum() / size;
-            var meanY = this.accY.sum() / size;
-            var meanZ = this.accZ.sum() / size;
+            long meanX = this.accX.sum() / size;
+            long meanY = this.accY.sum() / size;
+            long meanZ = this.accZ.sum() / size;
             return new Point((int) meanX, (int) meanY, (int) meanZ);
         }
     }

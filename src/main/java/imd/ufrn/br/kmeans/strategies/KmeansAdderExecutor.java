@@ -31,9 +31,17 @@ public class KmeansAdderExecutor implements KmeanStrategy {
         while (true) {
             clusterAccumulators.forEach(ClusterAccumulator::reset);
 
-            for (int i = 0 ; i < this.threads; i++) {
-                ThreadRunner runner = new ThreadRunner(i, this.threads, values, centroids, clusterAccumulators);
-                Future<?> future = executorService.submit(runner);
+            for (int futureIndex = 0 ; futureIndex < this.threads; futureIndex++) {
+                int finalFutureIndex = futureIndex;
+                List<Point> finalCentroids = centroids;
+                Future<?> future = executorService.submit(() -> {
+                    for (int i = finalFutureIndex; i < values.size(); i += this.threads) {
+                        Point targetPoint = values.get(i);
+                        int clusterIndex = KmeanCommon.getIndexClosestCentroid(targetPoint, finalCentroids);
+                        var clusterAccumulator = clusterAccumulators.get(clusterIndex);
+                        clusterAccumulator.addPoint(targetPoint);
+                    }
+                });
                 futures.add(future);
             }
 
@@ -99,32 +107,4 @@ public class KmeansAdderExecutor implements KmeanStrategy {
             return new Point((int) meanX, (int) meanY, (int) meanZ);
         }
     }
-
-    private class ThreadRunner implements Runnable {
-        private final int initialIndex;
-        private final int intervalIndex;
-        private final List<Point> values;
-        private final List<Point> centroids;
-        private final List<ClusterAccumulator> clusterAccumulators;
-
-        public ThreadRunner(int initialIndex, int intervalIndex, List<Point> values, List<Point> centroids, List<ClusterAccumulator> clusterAccumulators) {
-            this.initialIndex = initialIndex;
-            this.intervalIndex = intervalIndex;
-            this.values = values;
-            this.centroids = centroids;
-            this.clusterAccumulators = clusterAccumulators;
-        }
-
-        @Override
-        public void run() {
-            for (int i = this.initialIndex; i < this.values.size(); i += this.intervalIndex) {
-                Point targetPoint = values.get(i);
-                int clusterIndex = KmeanCommon.getIndexClosestCentroid(targetPoint, this.centroids);
-                var clusterAccumulator = this.clusterAccumulators.get(clusterIndex);
-                clusterAccumulator.addPoint(targetPoint);
-            }
-        }
-
-    }
-
 }

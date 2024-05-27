@@ -14,10 +14,11 @@ public class Input {
 
         var points = new ArrayList<Point>();
 
+        String[] parts = null;
+        String label = null;
         while (scanner.hasNext()) {
-            String[] parts = scanner.next().trim().split("\\s+");
-            String label = parts[0];
-
+            parts = scanner.next().split(" ");
+            label = parts[0];
             int red = Integer.parseInt(parts[1]);
             int green = Integer.parseInt(parts[2]);
             int blue = Integer.parseInt(parts[3]);
