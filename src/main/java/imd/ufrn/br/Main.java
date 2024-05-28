@@ -4,6 +4,7 @@ import imd.ufrn.br.common.ClustersUtils;
 import imd.ufrn.br.common.PointsUtils;
 import imd.ufrn.br.entities.Cluster;
 import imd.ufrn.br.entities.Point;
+import imd.ufrn.br.kmeans.KmeanCommon;
 import imd.ufrn.br.kmeans.strategies.*;
 import imd.ufrn.br.view.Input;
 
@@ -30,7 +31,7 @@ public class Main {
 
         System.err.println("Get values");
         var threadMode = ThreadMode.PLATAFORM;
-        var kmeansRunner = new KmeansAtomic(threadMode, 8);
+        var kmeansRunner = new KmeansConcurrentCollections();
 
         System.err.println("MODO: " + kmeansRunner.getClass().getName());
         System.err.println("  ThreadMode : " + threadMode);
@@ -43,7 +44,6 @@ public class Main {
         long elapsedTimeMsEnd = System.currentTimeMillis() - timeMsStart;
         System.out.println("Time total MS: " + elapsedTimeMsEnd);
 
-        // ClustersUtils.writeAllPointsWithCenterValues(output, System.out);
-
+        ClustersUtils.writeAllPointsWithCenterValues(output, System.out);
     }
 }

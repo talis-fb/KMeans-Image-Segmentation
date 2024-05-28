@@ -42,6 +42,10 @@ class KmeansTests {
                 new KmeansAdderExecutor( 8),
                 new KmeansAdderForkJoin(8),
 
+                new KmeansConcurrentCollections(),
+                new KmeansAdderParallelStream(),
+                new KmeansAdderStructuredConc(8),
+
                 new KmeansAtomic(ThreadMode.PLATAFORM, 8),
 
                 new KmeansParallelStream(),
