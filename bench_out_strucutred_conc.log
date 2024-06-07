@@ -1,0 +1,78 @@
+[1,183s][info][jfr,startup] Started recording 1. The result will be written to:
+[1,183s][info][jfr,startup] 
+[1,183s][info][jfr,startup] /home/talison/ufrn/conc/kmeans_java/flight_strucutured_conc.jfr
+# JMH version: 1.35
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /home/talison/.jdks/temurin-21.0.3/bin/java
+# VM options: --enable-preview -Xmx4g -XX:+FlightRecorder -XX:StartFlightRecording=duration=600s,filename=flight_strucutured_conc.jfr
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 2 iterations, 10 s each
+# Measurement: 5 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: imd.ufrn.br.bench.BenchTest.adder_strucutured_conc
+# Parameters: (K = 5, cores = 8)
+
+# Run progress: 0,00% complete, ETA 00:02:20
+# Fork: 1 of 1
+OpenJDK 64-Bit Server VM warning: Option FlightRecorder was deprecated in version 13.0 and will likely be removed in a future release.
+[0,838s][info][jfr,startup] Started recording 1. The result will be written to:
+[0,838s][info][jfr,startup] 
+[0,838s][info][jfr,startup] /home/talison/ufrn/conc/kmeans_java/flight_strucutured_conc.jfr
+# Warmup Iteration   1: initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187)]
+32,853 s/op
+# Warmup Iteration   2: initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187)]
+initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187)]
+8,045 s/op
+Iteration   1: initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187)]
+initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187)]
+8,761 s/op
+Iteration   2: initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187)]
+initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187)]
+8,027 s/op
+Iteration   3: initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187)]
+initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187)]
+8,503 s/op
+Iteration   4: initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187)]
+initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187)]
+8,312 s/op
+Iteration   5: initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187)]
+initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187)]
+8,174 s/op
+
+
+Result "imd.ufrn.br.bench.BenchTest.adder_strucutured_conc":
+  8,355 ±(99.9%) 1,104 s/op [Average]
+  (min, avg, max) = (8,027, 8,355, 8,761), stdev = 0,287
+  CI (99.9%): [7,251, 9,460] (assumes normal distribution)
+
+
+# JMH version: 1.35
+# VM version: JDK 21.0.3, OpenJDK 64-Bit Server VM, 21.0.3+9-LTS
+# VM invoker: /home/talison/.jdks/temurin-21.0.3/bin/java
+# VM options: --enable-preview -Xmx4g -XX:+FlightRecorder -XX:StartFlightRecording=duration=600s,filename=flight_strucutured_conc.jfr
+# Blackhole mode: compiler (auto-detected, use -Djmh.blackhole.autoDetect=false to disable)
+# Warmup: 2 iterations, 10 s each
+# Measurement: 5 iterations, 10 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: imd.ufrn.br.bench.BenchTest.adder_strucutured_conc
+# Parameters: (K = 25, cores = 8)
+
+# Run progress: 50,00% complete, ETA 00:02:14
+# Fork: 1 of 1
+OpenJDK 64-Bit Server VM warning: Option FlightRecorder was deprecated in version 13.0 and will likely be removed in a future release.
+[0,711s][info][jfr,startup] Started recording 1. The result will be written to:
+[0,711s][info][jfr,startup] 
+[0,711s][info][jfr,startup] /home/talison/ufrn/conc/kmeans_java/flight_strucutured_conc.jfr
+# Warmup Iteration   1: initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187), (253, 224, 186), (252, 223, 184), (252, 221, 184), (251, 221, 182), (249, 220, 181), (248, 220, 179), (248, 219, 178), (249, 217, 177), (249, 217, 176), (250, 218, 177), (251, 219, 178), (253, 220, 179), (253, 221, 181), (252, 224, 185), (251, 226, 190), (250, 227, 192), (251, 227, 193), (253, 228, 195), (255, 228, 196), (255, 227, 196)]
+66,214 s/op
+# Warmup Iteration   2: initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187), (253, 224, 186), (252, 223, 184), (252, 221, 184), (251, 221, 182), (249, 220, 181), (248, 220, 179), (248, 219, 178), (249, 217, 177), (249, 217, 176), (250, 218, 177), (251, 219, 178), (253, 220, 179), (253, 221, 181), (252, 224, 185), (251, 226, 190), (250, 227, 192), (251, 227, 193), (253, 228, 195), (255, 228, 196), (255, 227, 196)]
+46,979 s/op
+Iteration   1: initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187), (253, 224, 186), (252, 223, 184), (252, 221, 184), (251, 221, 182), (249, 220, 181), (248, 220, 179), (248, 219, 178), (249, 217, 177), (249, 217, 176), (250, 218, 177), (251, 219, 178), (253, 220, 179), (253, 221, 181), (252, 224, 185), (251, 226, 190), (250, 227, 192), (251, 227, 193), (253, 228, 195), (255, 228, 196), (255, 227, 196)]
+47,106 s/op
+Iteration   2: initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187), (253, 224, 186), (252, 223, 184), (252, 221, 184), (251, 221, 182), (249, 220, 181), (248, 220, 179), (248, 219, 178), (249, 217, 177), (249, 217, 176), (250, 218, 177), (251, 219, 178), (253, 220, 179), (253, 221, 181), (252, 224, 185), (251, 226, 190), (250, 227, 192), (251, 227, 193), (253, 228, 195), (255, 228, 196), (255, 227, 196)]
+47,124 s/op
+Iteration   3: initial: [(255, 229, 192), (255, 228, 191), (255, 228, 190), (255, 227, 189), (254, 226, 187), (253, 224, 186), (252, 223, 184), (252, 221, 184), (251, 221, 182), (249, 220, 181), (248, 220, 179), (248, 219, 178), (249, 217, 177), (249, 217, 176), (250, 218, 177), (251, 219, 178), (253, 220, 179), (253, 221, 181), (252, 224, 185), (251, 226, 190), (250, 227, 192), (251, 227, 193), (253, 228, 195), (255, 228, 196), (255, 227, 196)]

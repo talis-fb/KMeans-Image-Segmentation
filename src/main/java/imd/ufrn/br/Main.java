@@ -31,7 +31,7 @@ public class Main {
 
         System.err.println("Get values");
         var threadMode = ThreadMode.PLATAFORM;
-        var kmeansRunner = new KmeansConcurrentCollections();
+        var kmeansRunner = new KmeansAdderExecutor(81);
 
         System.err.println("MODO: " + kmeansRunner.getClass().getName());
         System.err.println("  ThreadMode : " + threadMode);
@@ -44,6 +44,6 @@ public class Main {
         long elapsedTimeMsEnd = System.currentTimeMillis() - timeMsStart;
         System.out.println("Time total MS: " + elapsedTimeMsEnd);
 
-        ClustersUtils.writeAllPointsWithCenterValues(output, System.out);
+        // ClustersUtils.writeAllPointsWithCenterValues(output, System.out);
     }
 }
