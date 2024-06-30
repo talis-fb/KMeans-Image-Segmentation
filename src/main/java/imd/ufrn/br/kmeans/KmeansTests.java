@@ -18,8 +18,6 @@ class KmeansTests {
     static Stream<KmeanStrategy> allKmeansStrategy() {
         return Stream.of(
                 new KmeansSerial(),
-                // new KmeansParallel(ThreadMode.PLATAFORM, 1),
-                // new KmeansParallel(ThreadMode.VIRTUAL, 1),
 
                 new KmeansParallelSemaphore(ThreadMode.PLATAFORM, 1),
                 new KmeansParallelSemaphore(ThreadMode.VIRTUAL, 1),
@@ -27,8 +25,8 @@ class KmeansTests {
                 new KmeansParallelLock(ThreadMode.PLATAFORM, 2),
                 new KmeansParallelLock(ThreadMode.VIRTUAL, 2),
 
-                // new KmeansParallelLockAndSemaphore(ThreadMode.PLATAFORM, 2),
-                // new KmeansParallelLockAndSemaphore(ThreadMode.VIRTUAL, 2),
+                new KmeansParallelLockAndSemaphore(ThreadMode.PLATAFORM, 2),
+                new KmeansParallelLockAndSemaphore(ThreadMode.VIRTUAL, 2),
 
                 new KmeansParallelVolatile(ThreadMode.PLATAFORM, 8),
 
@@ -39,14 +37,18 @@ class KmeansTests {
                 new KmeansParallelEachThread(ThreadMode.PLATAFORM, 8),
 
                 new KmeansAdder(ThreadMode.PLATAFORM, 8),
+                new KmeansAdder(ThreadMode.VIRTUAL, 8),
                 new KmeansAdderExecutor( 8),
                 new KmeansAdderForkJoin(8),
+                new KmeansAdderForkJoin(8, 2),
 
                 new KmeansConcurrentCollections(),
                 new KmeansAdderParallelStream(),
                 new KmeansAdderStructuredConc(8),
 
                 new KmeansAtomic(ThreadMode.PLATAFORM, 8),
+                new KmeansAtomic(ThreadMode.VIRTUAL, 8),
+                new KmeansAtomicFixedPool(8),
 
                 new KmeansParallelStream(),
                 new KmeansSerialStreams(),
@@ -65,6 +67,22 @@ class KmeansTests {
         HashSet<String> setPointsCluster2 = new HashSet<>(valuesPointsCluster2);
 
         assertEquals(setPointsCluster1, setPointsCluster2);
+    }
+
+    @ParameterizedTest
+    @MethodSource("allKmeansStrategy")
+    void testExecuteWithZeroPoints(KmeanStrategy kmeansStrategy) {
+        var values = new ArrayList<Point>();
+        var K = 2;
+        var initialCenters = new ArrayList<Point>(List.of(
+                new Point(1,2,3),
+                new Point(7,8,5)
+        ));
+
+        var output = kmeansStrategy.execute(values, K, initialCenters);
+        var expectedClusters = new ArrayList<Cluster>();
+
+        assertSameListOfCluster(expectedClusters, output);
     }
 
     @ParameterizedTest

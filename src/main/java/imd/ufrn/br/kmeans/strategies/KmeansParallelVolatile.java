@@ -40,8 +40,6 @@ public class KmeansParallelVolatile implements KmeanStrategy {
         };
 
         List<Thread> threads = new ArrayList<>();
-        // AtomicInteger threadsRunning = new AtomicInteger(this.threads);
-
 
         for (int i = 0; i < this.threads; i++) {
             int indexOfThread = i;

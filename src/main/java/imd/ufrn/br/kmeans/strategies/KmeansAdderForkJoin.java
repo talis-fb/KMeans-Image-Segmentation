@@ -12,9 +12,15 @@ import java.util.concurrent.atomic.LongAdder;
 
 public class KmeansAdderForkJoin implements KmeanStrategy {
     public int threads = 1;
+    public int threshold = 20;
 
     public KmeansAdderForkJoin(int threads) {
         this.threads = threads;
+    }
+
+    public KmeansAdderForkJoin(int threads, int threshold) {
+        this.threads = threads;
+        this.threshold = threshold;
     }
 
     @Override
@@ -30,7 +36,7 @@ public class KmeansAdderForkJoin implements KmeanStrategy {
         while (true) {
             clusterAccumulators.forEach(ClusterAccumulator::reset);
 
-            var task = new MeanTask(centroids, clusterAccumulators, values);
+            var task = new MeanTask(centroids, clusterAccumulators, values, this.threshold);
             forkJoinPool.invoke(task);
 
             List<Point> newCentroids = clusterAccumulators.stream().map(ClusterAccumulator::getMean).toList();
@@ -53,16 +59,17 @@ public class KmeansAdderForkJoin implements KmeanStrategy {
     }
 
     public class MeanTask extends  RecursiveAction {
-        private static final int THRESHOLD = 20;
+        private static int THRESHOLD = 20;
 
         private final List<Point> centroids;
         private final List<ClusterAccumulator> accumulators;
         private final List<Point> values;
 
-        public MeanTask(List<Point> centroids, List<ClusterAccumulator> accumulators, List<Point> values) {
+        public MeanTask(List<Point> centroids, List<ClusterAccumulator> accumulators, List<Point> values, int threshold) {
             this.centroids = centroids;
             this.accumulators = accumulators;
             this.values = values;
+            THRESHOLD = threshold;
         }
 
         @Override
@@ -79,8 +86,8 @@ public class KmeansAdderForkJoin implements KmeanStrategy {
                 List<Point> right = this.values.subList(half, this.values.size());
 
                 // Create subtasks for each half
-                MeanTask leftTask = new MeanTask(this.centroids,  this.accumulators, left);
-                MeanTask rightTask = new MeanTask(this.centroids, this.accumulators, right);
+                MeanTask leftTask = new MeanTask(this.centroids,  this.accumulators, left, THRESHOLD);
+                MeanTask rightTask = new MeanTask(this.centroids, this.accumulators, right, THRESHOLD);
 
                 // Fork the subtasks
                 leftTask.fork();
