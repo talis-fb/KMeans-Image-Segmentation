@@ -1,32 +1,67 @@
-# KMeans Image Segmentation CLI
+# Concurrent K-Means Image Segmentation in Rust and Java
 
-A Rust-based command-line tool implementing various [KMeans clustering algorithms](https://en.wikipedia.org/wiki/K-means_clustering) for image segmentation. 
+This repository is part of a comparative study on concurrent programming strategies for **K-Means clustering applied to image segmentation**. The study explores and contrasts different **concurrency models and techniques** in Rust and Java, analyzing their performance, synchronization mechanisms, and runtime characteristics.
 
-It covers multiple implementations of the KMeans algorithm, both serial and parallel. For perfomance comparison and study purposes.
+## Overview
 
-This tool is designed to work seamlessly with the [Image to CSV CLI project](https://github.com/talis-fb/img-to-csv). Use the img-to-csv tool to convert an image to CSV, process it with kmeans for segmentation, and convert the result back to an image.
+This project implements various K-Means clustering algorithms for image segmentation in both Rust and Java, focusing on different parallelization strategies. The goal is to evaluate the efficiency and scalability of each approach when applied to image processing and study purposes.
 
-### Java Version Available
-
-For a Java-based implementation of this project, visit the [KMeans Java Repository](https://github.com/talis-fb/kmeans_java).
+It's used the [Image to CSV CLI project](https://github.com/talis-fb/img-to-csv) to convert an image to CSV, process it with kmeans for segmentation, and convert the result back to an image.
 
 ## Image Segmentations with Different K Values
 
 To get a concrete example of result of this program...
 
-| Base Image      |
-| ------------- |
-| <img src="https://res.cloudinary.com/dfjn94vg8/image/upload/v1716473684/kmeans/input.jpg" height="300px"> |
+<table>
+  <tr>
+    <td>
+      <table>
+        <tr><th>Base Image</th></tr>
+        <tr><td><img src="https://res.cloudinary.com/dfjn94vg8/image/upload/v1716473684/kmeans/input.jpg" height="300px"></td></tr>
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>K</th><th>Image</th></tr>
+        <tr><td>2</td><td><img src="https://res.cloudinary.com/dfjn94vg8/image/upload/v1716473684/kmeans/output_2.jpg" height="250px"></td></tr>
+        <tr><td>5</td><td><img src="https://res.cloudinary.com/dfjn94vg8/image/upload/v1716473684/kmeans/output_5.jpg" height="250px"></td></tr>
+        <tr><td>10</td><td><img src="https://res.cloudinary.com/dfjn94vg8/image/upload/v1716473684/kmeans/output_10.jpg" height="250px"></td></tr>
+        <tr><td>25</td><td><img src="https://res.cloudinary.com/dfjn94vg8/image/upload/v1716473684/kmeans/output_25.jpg" height="250px"></td></tr>
+        <tr><td>60</td><td><img src="https://res.cloudinary.com/dfjn94vg8/image/upload/v1716473684/kmeans/output_60.jpg" height="250px"></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
 
+## Strategies and Tools Used
 
-| K     | Image      |
-| ------------- | ------------- |
-| 2 | <img src="https://res.cloudinary.com/dfjn94vg8/image/upload/v1716473684/kmeans/output_2.jpg" height="300px"> |
-| 5 | <img src="https://res.cloudinary.com/dfjn94vg8/image/upload/v1716473684/kmeans/output_5.jpg" height="300px"> |
-| 10 | <img src="https://res.cloudinary.com/dfjn94vg8/image/upload/v1716473684/kmeans/output_10.jpg" height="300px"> |
-| 25 | <img src="https://res.cloudinary.com/dfjn94vg8/image/upload/v1716473684/kmeans/output_25.jpg" height="300px"> |
-| 60 | <img src="https://res.cloudinary.com/dfjn94vg8/image/upload/v1716473684/kmeans/output_60.jpg" height="300px"> |
+### Java Implementation
 
+In the Java implementation, multiple strategies were employed to handle concurrency, including:
+
+* **Thread Synchronization Techniques**: Various approaches such as locks, synchronized blocks, and atomic operations were explored.
+
+* **Virtual Threads vs. Native Threads**: Performance was compared between traditional Java threads and virtual threads introduced in newer Java versions.
+
+* **Performance Profiling and Benchmarking**:
+
+  * JMH (Java Microbenchmark Harness): Used to benchmark different concurrency approaches.
+
+  * JMC (Java Mission Control): Employed for detailed profiling and runtime analysis.
+
+  * Java Profiling Tools: Used to inspect thread behavior, contention, and memory usage.
+
+### Rust Implementation
+
+In the Rust implementation, different concurrency models were tested:
+
+  * **Tokio Runtime**: An asynchronous runtime for handling concurrent tasks.
+
+  * **Rayon**: A data parallelism library optimized for multi-threading.
+
+  * **Rust Standard Library (std::thread)**: A more traditional multi-threading approach.
+
+Each runtime was analyzed based on execution speed, CPU utilization, and memory consumption.
 
 ### Example Workflow
 As the tool uses STDIN and STDOUT for communication, you can use pipes and redirection to integrate it with `img-to-csv`.
@@ -57,3 +92,7 @@ X:Y R G B
 ```
 * Input: CSV format from STDIN.
 * Output: CSV format to STDOUT with modified RGB values representing cluster centers.
+
+## Results...
+
+You can check them out [HERE](https://github.com/talis-fb/KMeans-Image-Segmentation/blob/master/Study_Report.pdf).
