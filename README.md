@@ -1,5 +1,7 @@
 # Concurrent K-Means Image Segmentation in Rust and Java
 
+[![Technologies](https://skillicons.dev/icons?i=rust,java)]()
+
 This repository is part of a comparative study on concurrent programming strategies for **K-Means clustering applied to image segmentation**. The study explores and contrasts different **concurrency models and techniques** in Rust and Java, analyzing their performance, synchronization mechanisms, and runtime characteristics.
 
 ## Overview
@@ -93,6 +95,26 @@ X:Y R G B
 * Input: CSV format from STDIN.
 * Output: CSV format to STDOUT with modified RGB values representing cluster centers.
 
-## Results...
+## Benchmarks
 
-You can check them out [HERE](https://github.com/talis-fb/KMeans-Image-Segmentation/blob/master/Study_Report.pdf).
+You can check the complete study [HERE](https://github.com/talis-fb/KMeans-Image-Segmentation/blob/master/Study_Report.pdf). 
+
+| Language | Implementation | Threading Mode | Milliseconds |
+|---|---|---|---|
+| ![Technologies](https://skillicons.dev/icons?i=java) | Adder | Platform | 46 |
+| ![Technologies](https://skillicons.dev/icons?i=rust) | Rayon (parallel iterators) | Platform | 48 |
+| ![Technologies](https://skillicons.dev/icons?i=java) | Adder Confinement | Platform | 51 |
+| ![Technologies](https://skillicons.dev/icons?i=rust) | Join (STD) | Native OS | 215.15 |
+| ![Technologies](https://skillicons.dev/icons?i=java) | ParallelStream | - | 243 |
+| ![Technologies](https://skillicons.dev/icons?i=rust) | Join (Tokio) | Green Threads | 333.45 |
+| ![Technologies](https://skillicons.dev/icons?i=java) | Volatile | Virtual | 384.998 |
+| ![Technologies](https://skillicons.dev/icons?i=java) | Lock And<br>Semaphore | Virtual | 392 |
+| ![Technologies](https://skillicons.dev/icons?i=java) | Lock | Virtual | 395 |
+| ![Technologies](https://skillicons.dev/icons?i=java) | Volatile | Platform | 396 |
+| ![Technologies](https://skillicons.dev/icons?i=java) | Join | Platform | 397 |
+| ![Technologies](https://skillicons.dev/icons?i=java) | Lock | Platform | 399 |
+| ![Technologies](https://skillicons.dev/icons?i=java) | Lock And<br>Semaphore | Platform | 405 |
+| ![Technologies](https://skillicons.dev/icons?i=java) | Semaphore | Virtual | 406 |
+| ![Technologies](https://skillicons.dev/icons?i=java) | Semaphore | Platform | 408 |
+| ![Technologies](https://skillicons.dev/icons?i=java) | Join | Virtual | 419 |
+| ![Technologies](https://skillicons.dev/icons?i=rust) | Mutex | Native OS | + 900 |
